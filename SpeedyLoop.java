@@ -3,6 +3,11 @@ import java.io.FileReader;
 import java.io.IOException;
 
 class SpeedyLoop {
+	private Graph graph;
+	public SpeedyLoop() {
+		this.graph = new Graph();
+	}
+
 	public static void main(String argv[]) {
 		if(argv.length != 1) {
 			//Display error and instructions if an input file is not provided.
@@ -13,17 +18,22 @@ class SpeedyLoop {
 			char startTown;
 			char endTown;
 			long distance;
+			SpeedyLoop sp = new SpeedyLoop();
+
 			try {
 				reader = new BufferedReader(new FileReader(argv[0]));
 				String line = reader.readLine();
 				while (line != null) {
-					System.out.println(line);
+					//Parse Start Town
 					startTown = line.charAt(0);
+					//Parse Start Town
 					endTown = line.charAt(1);
+					//Parse Distance between two towns
 					distance = Long.parseLong(line.substring(2));
-					System.out.println(startTown);
-					System.out.println(endTown);
-					System.out.println(distance);
+					//Add vertex to start town
+					sp.graph.addVertex(startTown);
+					//Add edge between two parsed towns
+					sp.graph.addEdge(startTown, endTown, distance);
 					// read next line
 					line = reader.readLine();
 				}
