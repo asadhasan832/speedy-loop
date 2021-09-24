@@ -2,6 +2,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
 
 class Graph {
     private Map<Vertex, List<Edge>> adjVertices;
@@ -22,5 +23,9 @@ class Graph {
 
     public List<Edge> getEdges(Vertex v) {
         return adjVertices.get(v);
+    }
+
+    public Set<Vertex> getVertices() {
+        return adjVertices.keySet();
     }
 }

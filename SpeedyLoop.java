@@ -7,8 +7,16 @@ import java.util.ArrayList;
 class SpeedyLoop {
 	private Graph graph;
 	private long totalTrips;
+	private DijkstrasAlgorithm dijkstrasAlgorithmSingleton;
+
 	public SpeedyLoop() {
 		this.graph = new Graph();
+		this.dijkstrasAlgorithmSingleton = new DijkstrasAlgorithm(this.graph);
+	}
+
+	public long shortestDistance(char startTown, char endTown) {
+		this.dijkstrasAlgorithmSingleton.traverse(new Vertex(startTown));
+		return this.dijkstrasAlgorithmSingleton.getShortestDistance(new Vertex(endTown));
 	}
 
 	/*
@@ -194,6 +202,8 @@ class SpeedyLoop {
 				System.out.println(sp.numberOfTripsMaxStops('C', 'C', 3));
 				System.out.println(sp.numberOfTripsExactStops('A', 'C', 4));
 				System.out.println(sp.numberOfRoutesMaxDistance('C', 'C', 30));
+				System.out.println(sp.shortestDistance('A', 'C'));
+				System.out.println(sp.shortestDistance('B', 'B'));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
