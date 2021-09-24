@@ -13,11 +13,15 @@ class Graph {
     public void addVertex(char id) {
         adjVertices.putIfAbsent(new Vertex(id), new ArrayList<>());
     }
-    
-    void addEdge(char id1, char id2, long weight) {
+
+    public void addEdge(char id1, char id2, long weight) {
         Vertex v1 = new Vertex(id1);
         Vertex v2 = new Vertex(id2);
         adjVertices.get(v1).add(new Edge(v2, weight));
         System.out.println(adjVertices.toString());
+    }
+
+    public List<Edge> getEdges(Vertex v) {
+        return adjVertices.get(v);
     }
 }

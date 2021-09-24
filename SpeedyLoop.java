@@ -4,8 +4,22 @@ import java.io.IOException;
 
 class SpeedyLoop {
 	private Graph graph;
+	public long totalTrips;
 	public SpeedyLoop() {
 		this.graph = new Graph();
+	}
+
+	public void numberOfTripsWithinStopRange(Vertex startTown, Vertex endTown,
+										long stopRangeStart, long stopRangeEnd,
+										long currentStops) {
+											if(startTown.equals(endTown) && currentStops > stopRangeStart && currentStops <= stopRangeEnd) totalTrips++;
+											if(currentStops < stopRangeEnd) {
+												for(Edge e: this.graph.getEdges(startTown)) {
+													numberOfTripsWithinStopRange(e.getDestination(),
+																							endTown, stopRangeStart,
+																							stopRangeEnd, currentStops + 1);
+												}
+											}
 	}
 
 	public static void main(String argv[]) {
@@ -30,14 +44,25 @@ class SpeedyLoop {
 					endTown = line.charAt(1);
 					//Parse Distance between two towns
 					distance = Long.parseLong(line.substring(2));
-					//Add vertex to start town
+					//Add vertex of start and end town
 					sp.graph.addVertex(startTown);
+					sp.graph.addVertex(endTown);
 					//Add edge between two parsed towns
 					sp.graph.addEdge(startTown, endTown, distance);
 					// read next line
 					line = reader.readLine();
 				}
 				reader.close();
+				sp.totalTrips = 0;
+				sp.numberOfTripsWithinStopRange(new Vertex('C'), new Vertex('C'),
+										0, 3,
+										0);
+				System.out.println(sp.totalTrips);
+				sp.totalTrips = 0;
+				sp.numberOfTripsWithinStopRange(new Vertex('A'), new Vertex('C'),
+										3, 4,
+										0);
+				System.out.println(sp.totalTrips);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
