@@ -18,7 +18,6 @@ class Graph {
         Vertex v1 = new Vertex(id1);
         Vertex v2 = new Vertex(id2);
         adjVertices.get(v1).add(new Edge(v2, weight));
-        System.out.println(adjVertices.toString());
     }
 
     public List<Edge> getEdges(Vertex v) {

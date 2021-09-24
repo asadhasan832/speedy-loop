@@ -4,12 +4,28 @@ import java.io.IOException;
 
 class SpeedyLoop {
 	private Graph graph;
-	public long totalTrips;
+	private long totalTrips;
 	public SpeedyLoop() {
 		this.graph = new Graph();
 	}
 
-	public void numberOfTripsWithinStopRange(Vertex startTown, Vertex endTown,
+	/*
+	* This method implements the calculation of the total number of trips within a
+	* given range of number of stops. Current implementation is recursive hence makes
+	* use of the Java call stack. When running in production a high stack-size with the 
+	* Java flag '-Xss'. Method can be refactored to be implemented in Sala to take 
+	* advantage of tail-recursion optimization, if the input size cannot be anticipated,
+	* and extremely large input has to be handled, granted such large input may be a 
+	* denial of service attack on the production systems, and rejection beyond the suitable
+	* stack size may be reasonable. 
+	* @param {Vertex} startTown - The starting vertex of graph to calculate number of trips from.
+	* @param {Vertex} endTown - The ending vertex of graph to calculate number of trips to.
+	* @param {long} stopRangeStart - The minimum number of stops (non-inclusive) to account for.
+	* @param {long} stopRangeEnd - The maximum number of stops (inclusive) to account for.
+	* @param {long} currentStops - Must be called with 0, Recursive sentinel to detect when
+	*							   maximum number of stops have with reached.
+	*/
+	private void numberOfTripsWithinStopRange(Vertex startTown, Vertex endTown,
 										long stopRangeStart, long stopRangeEnd,
 										long currentStops) {
 											if(startTown.equals(endTown) && currentStops > stopRangeStart && currentStops <= stopRangeEnd) totalTrips++;
@@ -20,6 +36,40 @@ class SpeedyLoop {
 																							stopRangeEnd, currentStops + 1);
 												}
 											}
+	}
+
+	/*
+	* This method calculated the number of trips between two towns, given their one character
+	* name, uptill a maximum number of stops.
+	* @param {char} startTown - One character starting town's name to calculate trips from.
+	* @param {char} endTown - One character ending town's name to calculate trips to.
+	* @param {long} maxStops - Maximum number of stops between startTown (non-inclusive) and
+	* endTown (inclusive).
+	* @return {long} maxStops
+	*/
+	public long numberOfTripsMaxStops(char startTown, char endTown, long maxStops) {
+		totalTrips = 0;
+		numberOfTripsWithinStopRange(new Vertex(startTown), new Vertex(endTown),
+										0, maxStops,
+										0);
+		return totalTrips;
+	}
+
+	/*
+	* This method calculated the number of trips between two towns, given their one character
+	* name, given the exact number of stops.
+	* @param {char} startTown - One character starting town's name to calculate trips from.
+	* @param {char} endTown - One character ending town's name to calculate trips to.
+	* @param {long} exactStops - Exact number of stops between startTown (non-inclusive) and
+	* endTown (inclusive).
+	* @return {long} maxStops
+	*/
+	public long numberOfTripsExactStops(char startTown, char endTown, long exactStops) {
+		totalTrips = 0;
+		numberOfTripsWithinStopRange(new Vertex(startTown), new Vertex(endTown),
+										exactStops-1, exactStops,
+										0);
+		return totalTrips;
 	}
 
 	public static void main(String argv[]) {
@@ -53,16 +103,8 @@ class SpeedyLoop {
 					line = reader.readLine();
 				}
 				reader.close();
-				sp.totalTrips = 0;
-				sp.numberOfTripsWithinStopRange(new Vertex('C'), new Vertex('C'),
-										0, 3,
-										0);
-				System.out.println(sp.totalTrips);
-				sp.totalTrips = 0;
-				sp.numberOfTripsWithinStopRange(new Vertex('A'), new Vertex('C'),
-										3, 4,
-										0);
-				System.out.println(sp.totalTrips);
+				System.out.println(sp.numberOfTripsMaxStops('C', 'C', 3));
+				System.out.println(sp.numberOfTripsExactStops('A', 'C', 4));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
