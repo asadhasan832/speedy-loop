@@ -11,7 +11,7 @@ class DijkstrasAlgorithm {
     private Map<Vertex, Long> distances;
 
     /*
-	* Contructor to create Dijstras Algorithm instance for a graph.
+	* Contructor to create Dijstras Algorithm singleton for a graph.
 	* @param {Graph} graph
 	*/
     public DijkstrasAlgorithm(Graph graph) {
