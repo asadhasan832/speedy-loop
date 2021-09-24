@@ -15,8 +15,30 @@ class SpeedyLoop {
 	}
 
 	public long shortestDistance(char startTown, char endTown) {
-		this.dijkstrasAlgorithmSingleton.traverse(new Vertex(startTown));
-		return this.dijkstrasAlgorithmSingleton.getShortestDistance(new Vertex(endTown));
+		if(startTown == endTown) { 
+			Vertex start = new Vertex(startTown);
+			Vertex closest = findClosestEdge(start).getDestination();
+			this.dijkstrasAlgorithmSingleton.traverse(start);
+			long distance1 = this.dijkstrasAlgorithmSingleton.getShortestDistance(closest);
+			this.dijkstrasAlgorithmSingleton.traverse(closest);
+			long distance2 = this.dijkstrasAlgorithmSingleton.getShortestDistance(start);
+
+			return distance1+distance2;
+		} else {
+			this.dijkstrasAlgorithmSingleton.traverse(new Vertex(startTown));
+			return this.dijkstrasAlgorithmSingleton.getShortestDistance(new Vertex(endTown));
+		}
+	}
+
+	private Edge findClosestEdge(Vertex start) {
+		List<Edge> edges = this.graph.getEdges(start);
+		Edge closest = null;
+		for(Edge e: edges) {
+			if(closest == null || closest.getWeight() > e.getWeight()) {
+				closest = e;
+			}
+		}
+		return closest;
 	}
 
 	/*
@@ -201,9 +223,9 @@ class SpeedyLoop {
 				System.out.println(sp.routeDistance(List.of('A', 'E', 'D')));
 				System.out.println(sp.numberOfTripsMaxStops('C', 'C', 3));
 				System.out.println(sp.numberOfTripsExactStops('A', 'C', 4));
-				System.out.println(sp.numberOfRoutesMaxDistance('C', 'C', 30));
 				System.out.println(sp.shortestDistance('A', 'C'));
 				System.out.println(sp.shortestDistance('B', 'B'));
+				System.out.println(sp.numberOfRoutesMaxDistance('C', 'C', 30));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
