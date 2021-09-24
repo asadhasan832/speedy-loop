@@ -10,6 +10,43 @@ class SpeedyLoop {
 	}
 
 	/*
+	* This method implements the calculation of the total number of routes within a
+	* uptill a maximum distance (non-inclusive). Current implementation is recursive hence
+	* makes use of the Java call stack. When running in production a high stack-size with the 
+	* Java flag '-Xss'. Method can be refactored to be implemented in Sala to take 
+	* advantage of tail-recursion optimization, if the input size cannot be anticipated,
+	* and extremely large input has to be handled, granted such large input may be a 
+	* denial of service attack on the production systems, and rejection beyond the suitable
+	* stack size may be reasonable. 
+	* @param {Vertex} startTown - The starting vertex of graph to calculate number of trips from.
+	* @param {Vertex} endTown - The ending vertex of graph to calculate number of trips to.
+	* @param {long} minDistance - The minimum distance (non-inclusive) to account for.
+	* @param {long} maxDistance - The maximum distance (inclusive) to account to calculate routes for.
+	* @param {long} currentDistance - Must be called with 0, recursive sentinel to detect when
+	*							   maximum distance has been reached.
+	*/
+	private void numberOfRoutesWithinDistanceRange(Vertex startTown, Vertex endTown,
+										long minDistance, long maxDistance,
+										long currentDistance) {
+											if(startTown.equals(endTown) && currentDistance > minDistance && currentDistance < maxDistance) totalTrips++;
+											if(currentDistance < maxDistance) {
+												for(Edge e: this.graph.getEdges(startTown)) {
+													numberOfRoutesWithinDistanceRange(e.getDestination(),
+																							endTown, minDistance,
+																							maxDistance, currentDistance + e.getWeight());
+												}
+											}
+	}
+
+	public long numberOfRoutesMaxDistance(char startTown, char endTown, long maxDistance) {
+		totalTrips = 0;
+		numberOfRoutesWithinDistanceRange(new Vertex(startTown), new Vertex(endTown),
+										0, maxDistance,
+										0);
+		return totalTrips;
+	}
+
+	/*
 	* This method implements the calculation of the total number of trips within a
 	* given range of number of stops. Current implementation is recursive hence makes
 	* use of the Java call stack. When running in production a high stack-size with the 
@@ -22,8 +59,8 @@ class SpeedyLoop {
 	* @param {Vertex} endTown - The ending vertex of graph to calculate number of trips to.
 	* @param {long} stopRangeStart - The minimum number of stops (non-inclusive) to account for.
 	* @param {long} stopRangeEnd - The maximum number of stops (inclusive) to account for.
-	* @param {long} currentStops - Must be called with 0, Recursive sentinel to detect when
-	*							   maximum number of stops have with reached.
+	* @param {long} currentStops - Must be called with 0, recursive sentinel to detect when
+	*							   maximum number of stops has been reached.
 	*/
 	private void numberOfTripsWithinStopRange(Vertex startTown, Vertex endTown,
 										long stopRangeStart, long stopRangeEnd,
@@ -105,6 +142,7 @@ class SpeedyLoop {
 				reader.close();
 				System.out.println(sp.numberOfTripsMaxStops('C', 'C', 3));
 				System.out.println(sp.numberOfTripsExactStops('A', 'C', 4));
+				System.out.println(sp.numberOfRoutesMaxDistance('C', 'C', 30));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
