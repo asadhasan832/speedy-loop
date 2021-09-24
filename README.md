@@ -7,7 +7,7 @@ This is an implementation of the SPEEDY LOOP problem in JAVA. Please follow the 
 
 ## Input format
 - This implementation accepts input from a text file where town name pair and distance is expected to be on one line each.
-- Example Input File:
+- Example input file format:
 ```
 AB5
 BC4
