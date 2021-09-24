@@ -11,7 +11,13 @@ class SpeedyLoop {
 		this.graph = new Graph();
 	}
 
-	public long routeDistance(ArrayList<Character> route) {
+	/*
+	* This method calculates the distance of a given route as an ArrayList of Characters.
+	* If the route does not exist, the method returns a -1 or else it returns the path's distance.
+	* @param {ArrayList<Character>} route - An ArrayList of towns given by their character as a route path.
+	* @return {long}
+	*/
+	private long routeDistance(ArrayList<Character> route) {
 		long distance = 0;
 		if(route.size() == 0) return distance;
 		char town = route.remove(0);
@@ -34,8 +40,24 @@ class SpeedyLoop {
 	}
 
 	/*
-	* This method implements the calculation of the total number of routes within a
-	* uptill a maximum distance (non-inclusive). Current implementation is recursive hence
+	* This method converts the List of towns given as a route to an ArrayList, to be passed to a
+	* polymorphic method of the same name which accepts ArrayList, and takes the resultant distance
+	* and returns it as a String representing the numeric distance. If a negative number is found a
+	* message stating 'NO SUCH ROUTE' is returned instead.
+	* @return {String}
+	*/
+	public String routeDistance(List<Character> route) {
+		long distance = routeDistance(new ArrayList<>(route));
+		if(distance < 0) {
+			return "NO SUCH ROUTE";
+		} else {
+			return Long.toString(distance);
+		}
+	}
+
+	/*
+	* This method implements the calculation of the total number of routes uptill a 
+	* maximum distance (non-inclusive). Current implementation is recursive hence
 	* makes use of the Java call stack. When running in production a high stack-size with the 
 	* Java flag '-Xss'. Method can be refactored to be implemented in Sala to take 
 	* advantage of tail-recursion optimization, if the input size cannot be anticipated,
@@ -164,11 +186,11 @@ class SpeedyLoop {
 					line = reader.readLine();
 				}
 				reader.close();
-				System.out.println(sp.routeDistance(new ArrayList<>(List.of('A', 'B', 'C'))));
-				System.out.println(sp.routeDistance(new ArrayList<>(List.of('A', 'D'))));
-				System.out.println(sp.routeDistance(new ArrayList<>(List.of('A', 'D', 'C'))));
-				System.out.println(sp.routeDistance(new ArrayList<>(List.of('A', 'E', 'B', 'C', 'D'))));
-				System.out.println(sp.routeDistance(new ArrayList<>(List.of('A', 'E', 'D'))));
+				System.out.println(sp.routeDistance(List.of('A', 'B', 'C')));
+				System.out.println(sp.routeDistance(List.of('A', 'D')));
+				System.out.println(sp.routeDistance(List.of('A', 'D', 'C')));
+				System.out.println(sp.routeDistance(List.of('A', 'E', 'B', 'C', 'D')));
+				System.out.println(sp.routeDistance(List.of('A', 'E', 'D')));
 				System.out.println(sp.numberOfTripsMaxStops('C', 'C', 3));
 				System.out.println(sp.numberOfTripsExactStops('A', 'C', 4));
 				System.out.println(sp.numberOfRoutesMaxDistance('C', 'C', 30));
