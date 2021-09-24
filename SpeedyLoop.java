@@ -202,6 +202,7 @@ class SpeedyLoop {
 			//Display error and instructions if an input file is not provided.
 			System.out.println("Usage: java SpeedyLoop INPUT_TEXT_FILE");
 			System.out.println("Example: java SpeedyLoop inputs.txt");
+			System.out.println("Note: Input must be one elemnet per line.");
 		} else {
 			BufferedReader reader;
 			char startTown;
