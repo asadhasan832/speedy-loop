@@ -1,12 +1,36 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
 
 class SpeedyLoop {
 	private Graph graph;
 	private long totalTrips;
 	public SpeedyLoop() {
 		this.graph = new Graph();
+	}
+
+	public long routeDistance(ArrayList<Character> route) {
+		long distance = 0;
+		if(route.size() == 0) return distance;
+		char town = route.remove(0);
+		Vertex startTown;
+		boolean found;
+		while(route.size() > 0) {
+			found = false;
+			startTown = new Vertex(town);
+			town = route.remove(0);
+			for(Edge e: this.graph.getEdges(startTown)) {
+				if(e.getDestination().equals(new Vertex(town))) {
+					distance += e.getWeight();
+					found = true;
+					break;
+				}
+			}
+			if(!found) return -1;
+		}
+		return distance;
 	}
 
 	/*
@@ -140,6 +164,11 @@ class SpeedyLoop {
 					line = reader.readLine();
 				}
 				reader.close();
+				System.out.println(sp.routeDistance(new ArrayList<>(List.of('A', 'B', 'C'))));
+				System.out.println(sp.routeDistance(new ArrayList<>(List.of('A', 'D'))));
+				System.out.println(sp.routeDistance(new ArrayList<>(List.of('A', 'D', 'C'))));
+				System.out.println(sp.routeDistance(new ArrayList<>(List.of('A', 'E', 'B', 'C', 'D'))));
+				System.out.println(sp.routeDistance(new ArrayList<>(List.of('A', 'E', 'D'))));
 				System.out.println(sp.numberOfTripsMaxStops('C', 'C', 3));
 				System.out.println(sp.numberOfTripsExactStops('A', 'C', 4));
 				System.out.println(sp.numberOfRoutesMaxDistance('C', 'C', 30));
