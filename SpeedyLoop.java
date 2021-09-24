@@ -8,26 +8,38 @@ class SpeedyLoop {
 	private Graph graph;
 	private long totalTrips;
 	private DijkstrasAlgorithm dijkstrasAlgorithmSingleton;
+	private DijkstrasAlgorithm dijkstrasAlgorithmSingletonCache;
 
 	public SpeedyLoop() {
 		this.graph = new Graph();
 		this.dijkstrasAlgorithmSingleton = new DijkstrasAlgorithm(this.graph);
+		this.dijkstrasAlgorithmSingletonCache = new DijkstrasAlgorithm(this.graph);
 	}
 
+	/*
+	* This method finds the edge to the closest vertex given a vertex.
+	* @param {Vertex} start
+	* @return {Edge} - Returns the edge leading to the closest vertex.
+	*/
 	public long shortestDistance(char startTown, char endTown) {
-		long distance;
+		long distance = Long.MAX_VALUE;
 		if(startTown == endTown) { 
-			/*Calculate shortest path to closest town and back
-			  given that the total of the two trips is the shortest path
-			  back to the same town itself.*/
 			Vertex start = new Vertex(startTown);
-			Vertex closest = findClosestEdge(start).getDestination();
-			this.dijkstrasAlgorithmSingleton.traverse(start);
-			long distance1 = this.dijkstrasAlgorithmSingleton.getShortestDistance(closest);
-			this.dijkstrasAlgorithmSingleton.traverse(closest);
-			long distance2 = this.dijkstrasAlgorithmSingleton.getShortestDistance(start);
-
-			distance = distance1+distance2;
+			//Cache the Dijstra Algorithm distances from start
+			this.dijkstrasAlgorithmSingletonCache.traverse(start);
+			List<Edge> edges = this.graph.getEdges(start);
+			//Calculated the shortest distance to each adjacent vertex from start
+			//and the shortest distance back in to it. This is better than assuming
+			//that the closest vertex will yield the total shortest loop, since the
+			//distance back may be much shorter to an adjacent vertex that is far,
+			//and the distance back may be much longer to an adjacent vertex that is close.
+			long distanceTmp;
+			for(Edge e: edges) {
+				distanceTmp = this.dijkstrasAlgorithmSingletonCache.getShortestDistance(e.getDestination());
+				this.dijkstrasAlgorithmSingleton.traverse(e.getDestination());
+				distanceTmp += this.dijkstrasAlgorithmSingleton.getShortestDistance(start);
+				if(distanceTmp < distance) distance = distanceTmp;
+			}
 		} else {
 			this.dijkstrasAlgorithmSingleton.traverse(new Vertex(startTown));
 			distance = this.dijkstrasAlgorithmSingleton.getShortestDistance(new Vertex(endTown));
@@ -38,17 +50,6 @@ class SpeedyLoop {
 		} else {
 			return distance;
 		}
-	}
-
-	private Edge findClosestEdge(Vertex start) {
-		List<Edge> edges = this.graph.getEdges(start);
-		Edge closest = null;
-		for(Edge e: edges) {
-			if(closest == null || closest.getWeight() > e.getWeight()) {
-				closest = e;
-			}
-		}
-		return closest;
 	}
 
 	/*
@@ -84,6 +85,7 @@ class SpeedyLoop {
 	* polymorphic method of the same name which accepts ArrayList, and takes the resultant distance
 	* and returns it as a String representing the numeric distance. If a negative number is found a
 	* message stating 'NO SUCH ROUTE' is returned instead.
+	* @param {ArrayList<Character>} route - A List of towns given by their character as a route path.
 	* @return {String}
 	*/
 	public String routeDistance(List<Character> route) {
@@ -226,15 +228,29 @@ class SpeedyLoop {
 					line = reader.readLine();
 				}
 				reader.close();
+				//The distance of the route A-B-C.
 				System.out.println(sp.routeDistance(List.of('A', 'B', 'C')));
+				//The distance of the route A-D.
 				System.out.println(sp.routeDistance(List.of('A', 'D')));
+				//The distance of the route A-D-C.
 				System.out.println(sp.routeDistance(List.of('A', 'D', 'C')));
+				//The distance of the route A-E-B-C-D.
 				System.out.println(sp.routeDistance(List.of('A', 'E', 'B', 'C', 'D')));
+				//The distance of the route A-E-D.
 				System.out.println(sp.routeDistance(List.of('A', 'E', 'D')));
+				//The number of trips starting at C and ending at C with a maximum of 3 stops.
+				//In the sample data below, there are two such trips: C-D-C (2 stops). and C-E-B-C (3 stops).
 				System.out.println(sp.numberOfTripsMaxStops('C', 'C', 3));
+				//The number of trips starting at A and ending at C with exactly 4 stops.
+				//In the sample data below, there are three such trips: A to C (via B,C,D);
+				//A to C (via D,C,D); and A to C (via D,E,B).
 				System.out.println(sp.numberOfTripsExactStops('A', 'C', 4));
+				//The length of the shortest route (in terms of distance to travel) from A to C.
 				System.out.println(sp.shortestDistance('A', 'C'));
+				//The length of the shortest route (in terms of distance to travel) from B to B.
 				System.out.println(sp.shortestDistance('B', 'B'));
+				//The number of different routes from C to C with a distance of less than 30.
+				//In the sample data, the trips are: CDC, CEBC, CEBCDC, CDCEBC, CDEBC, CEBCEBC, CEBCEBCEBC.
 				System.out.println(sp.numberOfRoutesMaxDistance('C', 'C', 30));
 			} catch (IOException e) {
 				e.printStackTrace();
