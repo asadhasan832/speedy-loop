@@ -15,7 +15,11 @@ class SpeedyLoop {
 	}
 
 	public long shortestDistance(char startTown, char endTown) {
+		long distance;
 		if(startTown == endTown) { 
+			/*Calculate shortest path to closest town and back
+			  given that the total of the two trips is the shortest path
+			  back to the same town itself.*/
 			Vertex start = new Vertex(startTown);
 			Vertex closest = findClosestEdge(start).getDestination();
 			this.dijkstrasAlgorithmSingleton.traverse(start);
@@ -23,10 +27,16 @@ class SpeedyLoop {
 			this.dijkstrasAlgorithmSingleton.traverse(closest);
 			long distance2 = this.dijkstrasAlgorithmSingleton.getShortestDistance(start);
 
-			return distance1+distance2;
+			distance = distance1+distance2;
 		} else {
 			this.dijkstrasAlgorithmSingleton.traverse(new Vertex(startTown));
-			return this.dijkstrasAlgorithmSingleton.getShortestDistance(new Vertex(endTown));
+			distance = this.dijkstrasAlgorithmSingleton.getShortestDistance(new Vertex(endTown));
+		}
+		if(distance == Long.MAX_VALUE) {
+			//Return an obviously distinguishable value if there are no paths in place of maximum value for long.
+			return -1;
+		} else {
+			return distance;
 		}
 	}
 
