@@ -1,5 +1,15 @@
 ## Introduction
-This is an implementation of the SPEEDY LOOP problem in JAVA. Please follow the following instructions to compile and execute, acommpanied by notes highligthing implementation limitations.
+This is an implementation of the SPEEDY LOOP problem for JAVA 8 or higher. Please follow the following instructions to compile and execute, acommpanied by notes highligthing implementation limitations.
+
+Submission by: Asad Hasan
+
+## Design Details
+- This solution implements an object oriented graph with vertex that reference edge objects which in-turn reference vertices.
+- The route distance problems are solved by iterating along the path provided in a list, and calculated edge weights along the way, or returning a negative sentinel to indicate that the path is not found, which is converted to a string for verbosity.
+- The number of trip problems are solved by recursively iterating over all possible routes starting from the starting town, counting all routes as a trip that end on the ending town, uptill the maximum number of stops is reached.
+- The shortest path problems are solved using Dijkstra's algorithm, which is implemented as a singleton design pattern. The shortest distance to the same starting town is calculated by finding the minimum sum amognst the shortest paths to neighboring town and back.
+- The number of different routes problem that are less than a given distance are solved by recursively iterating over all possible route from the starting town, counting all routes as a countable route that ends on the ending town, as long as the total distance covered reaching that town does not exceed the total allowed distance.
+
 
 ## Implementation Limitations
 - Current implementation can calculate total distances up to Long.MAX_VALUE (9223372036854775807 on a 64-bit machine).
