@@ -41,3 +41,6 @@ javac DijkstrasAlgorithm.java Graph.java Edge.java Vertex.java SpeedyLoop.java
 ```bash
 java SpeedyLoop inputs.txt
 ```
+
+## Lessons Learned
+- It would be beneficial to use the [oracle.spatial.network.lod](https://docs.oracle.com/cd/E11882_01/appdev.112/e11829/oracle/spatial/network/lod/Dijkstra.html) implementation instead of providing a Djikstra implementation, however OpenJDK compatibility would need to be assessed.
